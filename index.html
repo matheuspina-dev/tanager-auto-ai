@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tanager Auto AI</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-mark">↗</span
+        ><span class="brand-name">Tanager Auto AI</span></a
+      >
+      <div class="workspace">YOUR WORKSPACE</div>
+      <button class="nav active" id="discover">
+        ▦ <span>Discover deals</span></button
+      ><button class="nav" id="saved">
+        ☆ <span>Watchlist</span><span id="saved-count">0</span>
+      </button>
+      <div class="sidebar-bottom">
+        <span class="avatar">MP</span>
+        <div>Matheus Pina<small>Personal workspace</small></div>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <div class="breadcrumb">Workspace <span>/</span> Deal discovery</div>
+        <span class="demo"><i></i> Interactive prototype</span>
+      </header>
+      <section class="heading">
+        <div>
+          <div class="eyebrow">A BETTER WAY TO FIND YOUR NEXT FLIP</div>
+          <h1>Find the margin.</h1>
+          <p>Spot opportunities. Understand the repairs. Run the numbers.</p>
+        </div>
+        <button class="primary" id="add">＋ Analyze a listing</button>
+      </section>
+      <div class="notice">
+        <span>◈</span>
+        <div>
+          <strong>Demo garage</strong> · All listings, distances, and resale
+          values are fictional. Analysis uses transparent keyword rules. No live
+          search or AI model is connected.
+        </div>
+      </div>
+      <section class="stats">
+        <div>
+          <small>MATCHING LISTINGS</small><strong id="matches">—</strong
+          ><span>Across your current filters</span>
+        </div>
+        <div>
+          <small>BEST ESTIMATED PROFIT</small><strong id="best">—</strong
+          ><span>After all modeled costs</span>
+        </div>
+        <div>
+          <small>SAVED OPPORTUNITIES</small><strong id="saved-stat">0</strong
+          ><span>Your personal shortlist</span>
+        </div>
+      </section>
+      <div class="layout">
+        <form id="filters" class="panel filters">
+          <div class="panel-title">
+            <h2>Your search</h2>
+            <button type="button" class="text-button" id="reset-filters">
+              Reset
+            </button>
+          </div>
+          <label
+            >Search / keywords<input
+              id="query"
+              placeholder="e.g. misfire, Toyota"
+              type="search"
+          /></label>
+          <p class="hint">
+            Comma-separated terms match any. Searches titles and descriptions.
+          </p>
+          <div class="two">
+            <label
+              >Max price ($)<input
+                id="max-price"
+                type="number"
+                min="0"
+                value="8000" /></label
+            ><label
+              >Radius (mi)<input id="radius" type="number" min="0" value="100"
+            /></label>
+          </div>
+          <label
+            >Make<select id="make">
+              <option value="">All makes</option>
+              <option>Toyota</option>
+              <option>Honda</option>
+              <option>Chevrolet</option>
+              <option>BMW</option>
+              <option>Volkswagen</option>
+              <option>Subaru</option>
+            </select></label
+          ><label
+            >Max mileage<input
+              id="mileage"
+              type="number"
+              min="0"
+              value="200000" /></label
+          ><label
+            >Min estimated profit ($)<input
+              id="min-profit"
+              type="number"
+              value="0" /></label
+          ><label
+            >Exclude keywords<input
+              id="exclude"
+              value="parts only, no title" /></label
+          ><label class="check"
+            ><input type="checkbox" id="clean" checked /> Clean title reported
+            by seller</label
+          >
+          <div class="filter-foot">
+            <span class="location">◎ Provo, Utah</span>
+            <p class="hint">Distances are sample data measured from Provo.</p>
+            <button class="primary full" type="submit">
+              Apply filters <span>→</span>
+            </button>
+          </div>
+        </form>
+        <section class="results">
+          <div class="results-header">
+            <div>
+              <h2 id="results-title">Opportunities</h2>
+              <span id="result-count"></span>
+            </div>
+            <label class="sort-label"
+              >Sort by
+              <select id="sort">
+                <option value="profit">Highest profit</option>
+                <option value="price">Lowest price</option>
+                <option value="distance">Nearest first</option>
+              </select></label
+            >
+          </div>
+          <div id="cards" class="cards"></div>
+          <p class="results-footer">
+            Your edge comes from inspection. Estimates are editable assumptions.
+          </p>
+        </section>
+      </div>
+    </main>
+    <dialog id="detail"><div id="detail-content"></div></dialog>
+    <dialog id="add-dialog">
+      <form id="add-form">
+        <div class="panel-title">
+          <h2>Analyze your own listing</h2>
+          <button class="icon" type="button" id="close-add" aria-label="Close">
+            ×
+          </button>
+        </div>
+        <p class="muted">
+          Paste seller text to try the keyword analyzer. Values you enter are
+          assumptions, not market valuations.
+        </p>
+        <label
+          >Vehicle title<input
+            name="title"
+            required
+            placeholder="2012 Toyota Camry LE"
+            maxlength="120"
+        /></label>
+        <div class="two">
+          <label
+            >Asking price ($)<input
+              name="price"
+              type="number"
+              min="0"
+              required /></label
+          ><label
+            >Expected resale ($)<input
+              name="resale"
+              type="number"
+              min="0"
+              required
+          /></label>
+        </div>
+        <label
+          >Seller description<textarea
+            name="description"
+            required
+            rows="4"
+            maxlength="4000"
+            placeholder="Runs rough, check engine light, needs brakes..."
+          ></textarea></label
+        ><button class="primary full">Analyze listing →</button>
+      </form>
+    </dialog>
+    <div id="toast" role="status"></div>
+    <script src="src/domain.js"></script>
+    <script src="src/data.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
